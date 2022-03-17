@@ -1,0 +1,34 @@
+version: '3'
+
+#Services will behave as a Containers
+services:
+
+  mongo_db:
+  #providing image to create container
+    image: mongo
+    container_name: dbContainer
+    restart: always
+    #Binding Ports <Local Machine Port> : <Container Port>
+    ports:
+      - "8080:27017"
+    #This is a parsistant storage for docker
+    volumes:
+      - mongo_db:/data/db
+      
+  app:
+  #here . is a current directory
+    build: .
+    container_name: appContainer
+    restart: always
+    volumes:
+      - .:/src/app
+    ports:
+      - "3000:4000"
+      #after completion of mongo_db current service will be executed
+    depends_on:
+      - mongo_db
+      
+
+#creating the variable names
+volumes:
+  mongo_db:
